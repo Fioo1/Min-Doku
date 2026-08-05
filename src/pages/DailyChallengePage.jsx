@@ -1,0 +1,4 @@
+import { CalendarDays, Crown, Users } from 'lucide-react'
+import { Link } from 'react-router-dom'
+const levels=[['easy','Básico','42 pistas'],['intermediate','Intermedio','35 pistas'],['hard','Avanzado','29 pistas'],['master','Maestro','24 pistas']]
+export default function DailyChallengePage(){const date=new Intl.DateTimeFormat('es-PE',{weekday:'long',day:'numeric',month:'long'}).format(new Date());return <section className="module-page"><div className="module-hero"><div><p className="eyebrow">MULTIJUGADOR DIARIO</p><h1>El mismo tablero para todos</h1><p>{date}. Elige una dificultad y compite por el mejor tiempo.</p></div><Users/></div><div className="daily-levels">{levels.map(([id,name,detail])=><Link key={id} to={`/daily/${id}`}><CalendarDays/><div><strong>{name}</strong><span>{detail}</span></div><Crown/></Link>)}</div></section>}

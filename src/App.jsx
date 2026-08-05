@@ -9,6 +9,7 @@ import RankingPage from './pages/RankingPage'
 import ShopPage from './pages/ShopPage'
 import ProfilePage from './pages/ProfilePage'
 import SettingsPage from './pages/SettingsPage'
+import DailyChallengePage from './pages/DailyChallengePage'
 import UpdatePassword from "./pages/UpdatePassword";
 
 function ProtectedRoute({ children }) { const { user, loading } = useAuth(); if (loading) return <div className="boot-screen">Cargando MinDoku...</div>; return user ? children : <Navigate to="/auth" replace /> }
@@ -18,7 +19,8 @@ function AppRoutes() { return <GameProvider><Routes>
   <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
     <Route path="/" element={<HomePage />} />
     <Route path="/play/:difficulty?" element={<GamePage />} />
-    <Route path="/daily" element={<GamePage daily />} />
+    <Route path="/daily" element={<DailyChallengePage />} />
+    <Route path="/daily/:difficulty" element={<GamePage daily />} />
     <Route path="/ranking" element={<RankingPage />} />
     <Route path="/shop" element={<ShopPage />} />
     <Route path="/profile" element={<ProfilePage />} />
