@@ -6,6 +6,8 @@ import {
   Sparkles,
   Eye,
   EyeOff,
+  Mail,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -181,62 +183,127 @@ export default function AuthPage() {
             </label>
           )}
 
-          <label>
-            Correo electrónico
+          {mode === "login" ? (
 
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={update}
-              required
-              placeholder="tu@email.com"
-            />
-          </label>
+            <div className="login-input">
+
+              <Mail
+                size={18}
+                className="left-icon"
+              />
+
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={update}
+                required
+                placeholder="Correo electrónico"
+              />
+
+            </div>
+
+          ) : (
+
+            <label>
+
+              Correo electrónico
+
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={update}
+                required
+                placeholder="correoelectronico@gmail.com"
+              />
+
+            </label>
+
+          )}
 
           {mode !== "reset" && (
-            <>
-              <label>
-                Contraseña
 
-                <div className="password-field">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={form.password}
-                    onChange={update}
-                    required
-                    minLength={6}
-                    placeholder="Mínimo 6 caracteres"
-                  />
+            mode === "login" ? (
 
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() =>
-                      setShowPassword(!showPassword)
-                    }
-                  >
-                    {showPassword ? (
-                      <EyeOff size={18} />
-                    ) : (
-                      <Eye size={18} />
-                    )}
-                  </button>
-                </div>
-              </label>
+              <div className="login-input">
 
-              {mode === "register" && (
+                <Lock
+                  size={18}
+                  className="left-icon"
+                />
+
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={form.password}
+                  onChange={update}
+                  required
+                  placeholder="Contraseña"
+                />
+
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+
+                  {showPassword ? (
+                    <EyeOff size={18}/>
+                  ) : (
+                    <Eye size={18}/>
+                  )}
+
+                </button>
+
+              </div>
+
+            ) : (
+
+              <>
+
                 <label>
+
+                  Contraseña
+
+                  <div className="password-field">
+
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={form.password}
+                      onChange={update}
+                      required
+                      minLength={6}
+                      placeholder="Mínimo 6 caracteres"
+                    />
+
+                    <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+
+                      {showPassword ? (
+                        <EyeOff size={18}/>
+                      ) : (
+                        <Eye size={18}/>
+                      )}
+
+                    </button>
+
+                  </div>
+
+                </label>
+
+                <label>
+
                   Confirmar contraseña
 
                   <div className="password-field">
+
                     <input
-                      type={
-                        showConfirmPassword
-                          ? "text"
-                          : "password"
-                      }
+                      type={showConfirmPassword ? "text" : "password"}
                       name="confirmPassword"
                       value={form.confirmPassword}
                       onChange={update}
@@ -249,21 +316,21 @@ export default function AuthPage() {
                       type="button"
                       className="toggle-password"
                       onClick={() =>
-                        setShowConfirmPassword(
-                          !showConfirmPassword
-                        )
+                        setShowConfirmPassword(!showConfirmPassword)
                       }
                     >
+
                       {showConfirmPassword ? (
-                        <EyeOff size={18} />
+                        <EyeOff size={18}/>
                       ) : (
-                        <Eye size={18} />
+                        <Eye size={18}/>
                       )}
+
                     </button>
                   </div>
                 </label>
-              )}
-            </>
+              </>
+            )
           )}
 
           <button

@@ -25,3 +25,69 @@
 .toggle-password:hover {
   color: #6b4ce6;
 }
+
+/* LOGIN */
+
+.login-input{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.login-input input{
+
+    width:100%;
+
+    padding:14px 44px;
+
+    border:none;
+
+    border-bottom:2px solid #d9dcf5;
+
+    background:transparent;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.2s;
+
+}
+
+.login-input input:focus{
+
+    border-bottom:2px solid #6c4de6;
+
+}
+
+.left-icon{
+
+    position:absolute;
+
+    left:12px;
+
+    color:#8a8fa3;
+
+}
+
+.login-input .toggle-password{
+
+    position:absolute;
+
+    right:10px;
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+    color:#8a8fa3;
+
+}
