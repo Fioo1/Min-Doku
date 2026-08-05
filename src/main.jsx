@@ -7,5 +7,6 @@ import './styles/auth.css'
 import './styles/modules.css'
 import './styles/ranking.css'
 import './styles/game-improvements.css'
+import './styles/responsive.css'
 
 createRoot(document.getElementById('root')).render(<BrowserRouter><App /></BrowserRouter>)
