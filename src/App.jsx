@@ -14,6 +14,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 function ProtectedRoute({ children }) { const { user, loading } = useAuth(); if (loading) return <div className="boot-screen">Cargando MinDoku...</div>; return user ? children : <Navigate to="/auth" replace /> }
 function AppRoutes() { return <GameProvider><Routes>
   <Route path="/auth" element={<AuthPage />} />
+  <Route path="/update-password" element={<UpdatePassword />} />
   <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
     <Route path="/" element={<HomePage />} />
     <Route path="/play/:difficulty?" element={<GamePage />} />
@@ -22,7 +23,6 @@ function AppRoutes() { return <GameProvider><Routes>
     <Route path="/shop" element={<ShopPage />} />
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/settings" element={<SettingsPage />} />
-    <Route path="/update-password" element={<UpdatePassword />} />
   </Route>
   <Route path="*" element={<Navigate to="/" replace />} />
 </Routes></GameProvider> }

@@ -8,7 +8,45 @@ const normalize = data => ({ ...fallback, ...data, bestTime: formatTime(data?.be
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null); const [profile, setProfile] = useState(fallback); const [loading, setLoading] = useState(true)
   const loadProfile = async activeUser => { if (!activeUser) return setProfile(fallback); const { data, error } = await supabase.from('profiles').select('*').eq('id', activeUser.id).maybeSingle(); if (error) console.error(error); setProfile(data ? normalize(data) : normalize({ name: activeUser.user_metadata?.name || activeUser.email?.split('@')[0] || 'Jugador' })) }
-  useEffect(() => { if (!supabase) { setLoading(false); return }; supabase.auth.getSession().then(async ({ data }) => { setUser(data.session?.user || null); await loadProfile(data.session?.user); setLoading(false) }); const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => { setUser(session?.user || null); loadProfile(session?.user) }); return () => subscription.subscription.unsubscribe() }, [])
+  useEffect(() => {
+
+    if (!supabase) {
+
+      setLoading(false);
+      return;
+
+    }
+
+    supabase.auth.getSession().then(async ({ data }) => {
+
+      setUser(data.session?.user || null);
+
+      await loadProfile(data.session?.user);
+
+      setLoading(false);
+
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+
+      if (event === "PASSWORD_RECOVERY") {
+
+        window.location.href = "/update-password";
+        return;
+
+      }
+
+      setUser(session?.user || null);
+
+      await loadProfile(session?.user);
+
+    });
+
+    return () => subscription.unsubscribe();
+
+  }, []);
   const signIn = async ({ email, password }) => { const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) throw error }
   const signUp = async ({ name, email, password }) => { const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { name }, emailRedirectTo: window.location.origin } }); if (error) throw error; if (data.user) { const { error: profileError } = await supabase.from('profiles').upsert({ id: data.user.id, name: name || 'Jugador', level: 1, xp: 0, coins: 100, streak: 0 }); if (profileError) throw profileError } }
   const resetPassword = async email => { const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/update-password` }); if (error) throw error }
