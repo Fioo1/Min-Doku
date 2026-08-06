@@ -159,3 +159,43 @@ color:#7c8492;
 line-height:1.6;
 
 }
+
+/* ========================= */
+/* Racha */
+/* ========================= */
+
+.streak-active{
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    color:#f59e0b;
+
+    font-weight:700;
+
+}
+
+.streak-active svg{
+
+    color:#f59e0b;
+
+}
+
+.streak-pending{
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    color:#9ca3af;
+
+    font-weight:700;
+
+}
+
+.streak-pending svg{
+
+    color:#9ca3af;
+
+}
