@@ -1,1 +1,53 @@
-import{Award,Edit3,Gamepad2,Save}from'lucide-react';import{useState}from'react';import{useAuth}from'../context/AuthContext';import{useGame}from'../context/GameContext';export default function ProfilePage(){const{user,updateProfile}=useAuth(),{player}=useGame(),[name,setName]=useState(player.name),[editing,setEditing]=useState(false),save=()=>{updateProfile({name:name.trim()||'Jugador'});setEditing(false)};return <section className="module-page"><div className="profile-banner"><div className="profile-avatar">{player.name[0]}</div><div><p className="eyebrow">PERFIL DE JUGADOR</p>{editing?<div className="name-edit"><input value={name} onChange={e=>setName(e.target.value)} maxLength="32"/><button onClick={save}><Save size={16}/> Guardar</button></div>:<><h1>{player.name}</h1><p>{user?.email}</p></>}</div>{!editing&&<button className="outline-button" onClick={()=>setEditing(true)}><Edit3 size={16}/> Editar perfil</button>}</div><div className="profile-stats"><article><Gamepad2/><strong>{player.solved}</strong><span>Sudokus resueltos</span></article><article><Award/><strong>Nivel {player.level}</strong><span>{player.xp} XP acumulada</span></article></div><div className="achievements"><p className="eyebrow">LOGROS</p><h2>Tu colección</h2><div><span>✦ Primer tablero</span><span className={player.solved>=10?'unlocked':''}>10 partidas</span><span className={player.level>=10?'unlocked':''}>Nivel 10</span><span className={player.streak>=7?'unlocked':''}>Racha de 7 días</span></div></div></section>}
+import{Award,Edit3,Gamepad2,Save}from'lucide-react';import{useState}from'react';import{useAuth}from'../context/AuthContext';import{useGame}from'../context/GameContext';export default function ProfilePage(){const{user,updateProfile}=useAuth(),{player}=useGame(),[name,setName]=useState(player.name),[editing,setEditing]=useState(false),save=()=>{updateProfile({name:name.trim()||'Jugador'});setEditing(false)};return <section className="module-page"><div className="profile-banner"><div className="profile-avatar">{player.name[0]}</div><div><p className="eyebrow">PERFIL DE JUGADOR</p>{editing?<div className="name-edit"><input value={name} onChange={e=>setName(e.target.value)} maxLength="32"/><button onClick={save}><Save size={16}/> Guardar</button></div>:<><h1>{player.name}</h1><p>{user?.email}</p></>}</div>{!editing&&<button className="outline-button" onClick={()=>setEditing(true)}><Edit3 size={16}/> Editar perfil</button>}</div><div className="profile-stats"><article><Gamepad2/><strong>{player.solved}</strong><span>Sudokus resueltos</span></article><article><Award/><strong>Nivel {player.level}</strong><span>{player.xp} XP acumulada</span></article><article>
+
+  🔥
+
+  <strong>
+
+    {player.streak}
+
+  </strong>
+
+  <span>
+
+    Racha actual
+
+  </span>
+
+</article>
+
+<article>
+
+  🏆
+
+  <strong>
+
+    {player.best_streak}
+
+  </strong>
+
+  <span>
+
+    Mejor racha
+
+  </span>
+
+</article>
+
+<article>
+
+  🛡️
+
+  <strong>
+
+    {player.streak_shields}
+
+  </strong>
+
+  <span>
+
+    Escudos disponibles
+
+  </span>
+
+</article></div><div className="achievements"><p className="eyebrow">LOGROS</p><h2>Tu colección</h2><div><span>✦ Primer tablero</span><span className={player.solved>=10?'unlocked':''}>10 partidas</span><span className={player.level>=10?'unlocked':''}>Nivel 10</span><span className={player.streak>=7?'unlocked':''}>Racha de 7 días</span></div></div></section>}
