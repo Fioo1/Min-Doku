@@ -103,6 +103,8 @@ export function GameProvider({ children }) {
     }).catch(console.error);
 
   };
+
+  
   return <GameContext.Provider value={{ player, spend, recordWin }}>{children}</GameContext.Provider>
 }
 export const useGame = () => useContext(GameContext)

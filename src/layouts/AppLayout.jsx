@@ -37,6 +37,13 @@ export default function AppLayout() {
 
   const playedToday = player.last_played === today;
 
+  const streakClass =
+    player.streak === 0
+      ? "streak-pending"
+      : playedToday
+      ? "streak-active"
+      : "streak-pending";
+
   useEffect(() => {
 
     const result = checkStreak(player);
@@ -162,11 +169,7 @@ export default function AppLayout() {
           <div className="top-stats">
 
             <span
-              className={
-                playedToday
-                  ? "streak-active"
-                  : "streak-pending"
-              }
+              className={streakClass}
             >
 
               <Flame size={18} />
