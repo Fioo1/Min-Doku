@@ -75,7 +75,26 @@ export function AuthProvider({ children }) {
       updated_at: new Date().toISOString()
   }; 
 const { error } = await supabase.from('profiles').upsert(record); if (error) { setProfile(profile); throw error } return next }
-  const saveGame = async game => { if (!user) return; const { error } = await supabase.from('game_history').insert({ user_id: user.id, ...game }); if (error) throw error }
+  const saveGame = async (game) => {
+
+    if (!user) return;
+  
+    const { data, error } = await supabase
+      .from("game_history")
+      .insert({
+        user_id: user.id,
+        ...game,
+      })
+      .select();
+  
+    console.log("GAME DATA:", data);
+    console.log("GAME ERROR:", error);
+  
+    if (error) {
+      throw error;
+    }
+  
+  };
   const value = useMemo(() => ({ user, profile, loading, signIn, signUp, resetPassword, signOut, updateProfile, saveGame, configured: Boolean(supabase) }), [user, profile, loading])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
