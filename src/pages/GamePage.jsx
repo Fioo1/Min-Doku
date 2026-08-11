@@ -542,14 +542,14 @@ export default function GamePage({ daily }) {
 
             </button>
 
-            <button
-              className="text-action modal-retry"
-              onClick={retry}
-            >
-
-              Volver a intentarlo
-
-            </button>
+            {!daily && (
+              <button
+                className="text-action modal-retry"
+                onClick={retry}
+              >
+                Volver a intentarlo
+              </button>
+            )}
 
           </div>
 
