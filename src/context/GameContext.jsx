@@ -1,11 +1,61 @@
 import { createContext, useContext } from 'react'
 import { useAuth } from './AuthContext'
-import { checkStreak } from "../utils/streak";
+import { checkStreak } from '../utils/streak'
+
 const GameContext = createContext(null)
-const initial = { name: 'Jugador', level: 1, xp: 0, coins: 100, streak: 0, solved: 0, bestTime: '--:--', best_time_seconds: null, games_played: 0, wins: 0, total_mistakes: 0, hints_used: 0 }
+
+const initial = {
+  name: 'Jugador',
+  level: 1,
+  xp: 0,
+  coins: 100,
+  streak: 0,
+  best_streak: 0,
+  streak_shields: 2,
+  last_played: null,
+  solved: 0,
+  bestTime: '--:--',
+  best_time_seconds: null,
+  games_played: 0,
+  wins: 0,
+  total_mistakes: 0,
+  hints_used: 0,
+}
+
 export function GameProvider({ children }) {
-  const { profile, updateProfile, saveGame } = useAuth(); const player = { ...initial, ...profile }
-  const spend = amount => { if (player.coins < amount) return false; updateProfile({ coins: player.coins - amount }).catch(console.error); return true }
+
+  const {
+    profile,
+    updateProfile,
+    saveGame,
+  } = useAuth()
+
+  const player = {
+    ...initial,
+    ...profile,
+  }
+
+  // --------------------------------
+  // GASTAR MONEDAS
+  // --------------------------------
+
+  const spend = (amount) => {
+
+    if (player.coins < amount) {
+      return false
+    }
+
+    updateProfile({
+      coins: player.coins - amount,
+    }).catch(console.error)
+
+    return true
+  }
+
+  // --------------------------------
+  // REGISTRAR VICTORIA
+  // --------------------------------
+
   const recordWin = ({
     coins,
     xp,
@@ -16,71 +66,118 @@ export function GameProvider({ children }) {
     daily,
   }) => {
 
+    // Mejor tiempo
     const best =
       player.best_time_seconds === null ||
       seconds < player.best_time_seconds
         ? seconds
-        : player.best_time_seconds;
+        : player.best_time_seconds
 
-    const today = new Date().toISOString().slice(0, 10);
+    // Fecha LOCAL del usuario
+    const now = new Date()
 
-    const streakState = checkStreak(player);
+    const today =
+      `${now.getFullYear()}-${String(
+        now.getMonth() + 1
+      ).padStart(2, '0')}-${String(
+        now.getDate()
+      ).padStart(2, '0')}`
 
-    let streak = player.streak;
-    let bestStreak = player.best_streak;
+    // Revisar estado actual de la racha
+    const streakState = checkStreak(player)
 
-    switch (streakState.status) {
+    let streak = player.streak
+    let bestStreak = player.best_streak || 0
 
-      case "first_time":
-        streak = 1;
-        break;
+    // --------------------------------
+    // CALCULAR RACHA
+    // --------------------------------
 
-      case "continue":
-        streak += 1;
-        break;
+    if (streakState.status === 'first_time') {
 
-      case "already_played":
-        break;
+      // Nunca había jugado
+      streak = 1
 
-      case "missed":
-        // Por ahora no hacemos nada.
-        // Más adelante aquí aparecerá el modal.
-        break;
+    } else if (streakState.status === 'continue') {
 
+      // Jugó ayer
+      streak = player.streak + 1
+
+    } else if (streakState.status === 'already_played') {
+
+      // Ya jugó hoy.
+      // NO aumentamos la racha.
+      streak = player.streak
+
+    } else if (streakState.status === 'missed') {
+
+      // Si faltó uno o más días,
+      // por ahora mantenemos la racha.
+      //
+      // La decisión de usar escudo o perder
+      // la racha se maneja desde el sistema
+      // de StreakModal.
+      streak = player.streak
     }
 
-    bestStreak = Math.max(bestStreak, streak);
+    // Actualizar mejor racha solamente
+    // si la nueva racha es superior.
+    bestStreak = Math.max(
+      bestStreak,
+      streak
+    )
+
+    // --------------------------------
+    // ACTUALIZAR PERFIL
+    // --------------------------------
 
     updateProfile({
 
-      coins: player.coins + coins,
+      coins:
+        player.coins + coins,
 
-      xp: player.xp + xp,
+      xp:
+        player.xp + xp,
 
-      solved: player.solved + 1,
+      solved:
+        player.solved + 1,
 
-      games_played: player.games_played + 1,
+      games_played:
+        player.games_played + 1,
 
-      wins: player.wins + 1,
+      wins:
+        player.wins + 1,
 
-      total_mistakes: player.total_mistakes + mistakes,
+      total_mistakes:
+        player.total_mistakes + mistakes,
 
-      hints_used: player.hints_used + hintsUsed,
+      hints_used:
+        player.hints_used + hintsUsed,
 
-      best_time_seconds: best,
+      best_time_seconds:
+        best,
 
-      level: Math.max(
-        player.level,
-        Math.floor((player.xp + xp) / 500) + 1
-      ),
+      level:
+        Math.max(
+          player.level,
+          Math.floor(
+            (player.xp + xp) / 500
+          ) + 1
+        ),
 
       streak,
 
-      best_streak: bestStreak,
+      best_streak:
+        bestStreak,
 
-      last_played: today,
+      last_played:
+        today,
 
-    }).catch(console.error);
+    }).catch(console.error)
+
+    // --------------------------------
+    // GUARDAR HISTORIAL DE PARTIDA
+    // --------------------------------
 
     saveGame({
 
@@ -90,21 +187,34 @@ export function GameProvider({ children }) {
 
       mistakes,
 
-      hints_used: hintsUsed,
+      hints_used:
+        hintsUsed,
 
       daily,
 
-      challenge_date: daily
-        ? today
-        : null,
+      challenge_date:
+        daily
+          ? today
+          : null,
 
-      completed: true,
+      completed:
+        true,
 
-    }).catch(console.error);
+    }).catch(console.error)
+  }
 
-  };
-
-  
-  return <GameContext.Provider value={{ player, spend, recordWin }}>{children}</GameContext.Provider>
+  return (
+    <GameContext.Provider
+      value={{
+        player,
+        spend,
+        recordWin,
+      }}
+    >
+      {children}
+    </GameContext.Provider>
+  )
 }
-export const useGame = () => useContext(GameContext)
+
+export const useGame = () =>
+  useContext(GameContext)
