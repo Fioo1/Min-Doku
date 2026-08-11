@@ -154,36 +154,26 @@ export default function ShopPage() {
 
               <button
                 onClick={() => buy(item)}
-                disabled={
-                  has ||
-                  !canBuy
-                }
+                disabled={has || !canBuy}
+                className={!canBuy && !has ? 'shop-buy-disabled' : ''}
               >
-
                 {has ? (
-
                   <>
                     <Check size={16} />
                     Obtenido
                   </>
-
                 ) : (
-
                   <>
                     {item.cost} monedas
                   </>
-
                 )}
-
               </button>
-
-              {/* MENSAJE DE DINERO INSUFICIENTE */}
-
+              
               {!canBuy && !has && (
-
-                <small className="insufficient-money">
-                  Monedas insuficientes
-                </small>
+                <div className="insufficient-money">
+                  No tienes suficientes monedas
+                </div>
+              )}
 
               )}
 
